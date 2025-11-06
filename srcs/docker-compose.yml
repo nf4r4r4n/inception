@@ -1,0 +1,103 @@
+version: '3.8'
+
+# ----------
+#  SERVICES
+# ----------
+services:
+  # ---------
+  #  NGINX
+  # ---------
+  nginx:
+    container_name: nginx
+    build:
+      context: ./requirements/nginx
+    restart: always
+    depends_on:
+      - wordpress
+    volumes:
+      - wp_data:/var/www/html
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - frontend
+      - backend
+
+  # -----------
+  #  WORDPRESS
+  # -----------
+  wordpress:
+    container_name: wordpress
+    build:
+      context: ./requirements/wordpress
+    restart: always
+    depends_on:
+      - mariadb
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_USER: ${DB_USER}
+      WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_pass
+      WORDPRESS_DB_NAME: ${DB_NAME}
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - backend
+    secrets:
+      - db_pass
+      - db_root_pass
+
+  # ---------
+  #  MARIADB
+  # ---------
+  mariadb:
+    container_name: mariadb
+    build:
+      context: ./requirements/mariadb
+    restart: always
+    environment:
+      DB_USER: ${DB_USER}
+      DB_NAME: ${DB_NAME}
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - backend
+    secrets:
+      - db_pass
+      - db_root_pass
+
+# ----------
+#  NETWORKS
+# ----------
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+# ---------
+#  SECRETS
+# ---------
+secrets:
+  db_pass:
+    file: ../secrets/db_pass.txt
+  db_root_pass:
+    file: ../secrets/db_root_pass.txt
+
+# ---------
+#  VOLUMES
+# ---------
+volumes:
+  db_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/nfararan/data/db_data
+      o: bind
+  wp_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/nfararan/data/wp_data
+      o: bind

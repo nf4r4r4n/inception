@@ -1,0 +1,30 @@
+# Fichiers et dossiers à ignorer dans le projet Inception 42
+
+# Fichiers temporaires
+*.tmp
+*.temp
+*.log
+
+# Dossiers système
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerenv
+!docker-compose.yml
+
+# Dossiers de données persistantes (à conserver dans le dépôt)
+!/data/
+
+# Fichiers de configuration sensibles
+env
+*.env.local
+*.env.development.local
+*.env.test.local
+*.env.production.local
+
+# Dossiers de build
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
