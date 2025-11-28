@@ -15,13 +15,12 @@ RUN apt update && \
         php-zip \
         php-opcache \
         wget \
-        supervisor \
         mariadb-client && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Créer les répertoires nécessaires
-RUN mkdir -p /run/php /var/log/supervisor /var/www/html
+RUN mkdir -p /run/php /var/www/html
 
 # Définir le répertoire de travail
 WORKDIR /tmp
@@ -37,7 +36,7 @@ RUN cp -r wordpress/* /var/www/html/ && \
 
 # Copier les scripts et configurations
 COPY ./tools/entrypoint.sh /entrypoint.sh
-COPY ./tools/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
 
 # Rendre les scripts exécutables
 RUN chmod +x /entrypoint.sh
@@ -58,5 +57,5 @@ EXPOSE 9000
 # Point d'entrée
 ENTRYPOINT ["/entrypoint.sh"]
 
-# Démarrer supervisord
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Démarrer PHP-FPM en mode premier plan
+CMD ["/usr/sbin/php-fpm7.4", "--nodaemonize"]

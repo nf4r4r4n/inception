@@ -2,7 +2,7 @@ FROM debian:bullseye-slim
 
 # Installer MariaDB
 RUN apt update && \
-    apt install -y --no-install-recommends mariadb-server supervisor && \
+    apt install -y --no-install-recommends mariadb-server && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -14,7 +14,6 @@ COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 
 # Copier les scripts
 COPY ./tools/init_db.sh /init_db.sh
-COPY ./tools/mariadb.conf /etc/supervisor/conf.d/mariadb.conf
 
 # Rendre les scripts exécutables
 RUN chmod +x /init_db.sh
