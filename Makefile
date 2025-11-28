@@ -1,5 +1,3 @@
-# Makefile pour le projet Inception 42
-
 # Variables
 COMPOSE_FILE = srcs/docker-compose.yml
 DATA_DIR = /home/nfararan/data
@@ -10,7 +8,7 @@ SECRETS_DIR = secrets
 
 # Afficher l'aide
 help: ## Afficher ce message d'aide
-	@echo "Projet Inception 42 - Commandes disponibles :"
+	@echo "Inception - Commandes disponibles :"
 	@echo ""
 	@echo "  make setup      - Configurer l'environnement (secrets, dossiers)"
 	@echo "  make up         - Démarrer tous les services"
@@ -34,19 +32,19 @@ setup: ## Configurer l'environnement (secrets, dossiers)
 # Construire les images
 build: ## Construire les images Docker
 	@echo "Construction des images Docker..."
-	@cd srcs && docker-compose -f $(COMPOSE_FILE) build
+	@docker-compose -f $(COMPOSE_FILE) build
 	@echo "Construction terminée !"
 
 # Démarrer les services
 up: setup ## Démarrer tous les services
 	@echo "Démarrage des services..."
-	@cd srcs && docker-compose -f $(COMPOSE_FILE) up -d
+	@docker-compose -f $(COMPOSE_FILE) up -d
 	@echo "Services démarrés ! Accédez à https://localhost"
 
 # Arrêter les services
 down: ## Arrêter tous les services
 	@echo "Arrêt des services..."
-	@cd srcs && docker-compose -f $(COMPOSE_FILE) down
+	@docker-compose -f $(COMPOSE_FILE) down
 	@echo "Services arrêtés !"
 
 # Redémarrer les services
@@ -59,17 +57,17 @@ restart: ## Redémarrer tous les services
 # Afficher les logs
 logs: ## Afficher les logs de tous les services
 	@echo "Affichage des logs..."
-	@cd srcs && docker-compose -f $(COMPOSE_FILE) logs -f
+	@docker-compose -f $(COMPOSE_FILE) logs -f
 
 # Afficher l'état des services
 ps: ## Afficher l'état des services
 	@echo "État des services :"
-	@cd srcs && docker-compose -f $(COMPOSE_FILE) ps
+	@docker-compose -f $(COMPOSE_FILE) ps
 
 # Nettoyer l'environnement
 clean: ## Arrêter et supprimer tous les conteneurs
 	@echo "Nettoyage de l'environnement..."
-	@cd srcs && docker-compose -f $(COMPOSE_FILE) down -v
+	@docker-compose -f $(COMPOSE_FILE) down -v
 	@echo "Environnement nettoyé !"
 
 # Liste des commandes avec descriptions

@@ -16,7 +16,7 @@ RUN apt update && \
         php-opcache \
         wget \
         supervisor \
-        mysql-client && \
+        mariadb-client && \
     apt clean && \
     rm -rf /var/lib/apt/lists/*
 
