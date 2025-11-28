@@ -24,52 +24,69 @@ DB_ROOT_PASS=$(cat /run/secrets/db_root_pass)
 DB_USER=${DB_USER:-wordpress_user}
 DB_NAME=${DB_NAME:-wordpress_db}
 
-touch $INIT_FILE
+# Créer les répertoires nécessaires et s'assurer des droits appropriés
+mkdir -p /var/run/mysqld /var/log/mysql
+chown mysql:mysql /var/run/mysqld /var/log/mysql
+chown -R mysql:mysql /var/lib/mysql
 
+# Démarrer MariaDB en mode bootstrap pour configurer les utilisateurs initiaux
 log "Starting temporary MariaDB..."
-# Démarrer MariaDB manuellement
-mysqld --user=mysql --console --skip-name-resolve --skip-networking=0 &
-# Attendre que le serveur soit prêt
-sleep 5
 
-# Vérifier que MariaDB est démarré
-for i in {30..0}; do
-    if mysqladmin -u root ping &> /dev/null; then
-        break
+# Démarrer mysqld en tant qu'utilisateur mysql
+# On désactive les options de réseau temporairement
+mysqld --user=mysql --datadir=/var/lib/mysql --socket=/var/run/mysqld/mysqld.sock \
+       --pid-file=/var/run/mysqld/mysqld.pid --skip-networking --skip-grant-tables \
+       --skip-name-resolve --bind-address=127.0.0.1 &
+
+MYSQLD_PID=$!
+sleep 10
+
+# Vérifier que le processus est actif
+if ! kill -0 $MYSQLD_PID 2>/dev/null; then
+    log "MariaDB failed to start."
+    # Essayons de regarder les logs d'erreur
+    if [ -f /var/log/mysql/error.log ]; then
+        log "Error log content:"
+        cat /var/log/mysql/error.log
     fi
-    log "Waiting for MariaDB to start..."
-    sleep 1
-done
-
-if [ "$i" = 0 ]; then
-    log "MariaDB did not start in time."
     exit 1
 fi
 
-log "MariaDB started"
+log "MariaDB started with PID $MYSQLD_PID"
+
+# Créer le fichier SQL d'initialisation
+touch $INIT_FILE
 
 log "Creating Users & Database..."
 # Création des utilisateurs
-add_sql "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';"
-add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%' WITH GRANT OPTION;"
-add_sql "CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$DB_ROOT_PASS';"
-add_sql "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
+# En mode --skip-grant-tables, on peut se connecter sans mot de passe
 add_sql "FLUSH PRIVILEGES;"
+add_sql "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';"
+add_sql "CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
+add_sql "CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$DB_ROOT_PASS';"
+add_sql "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASS';"
+add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%' WITH GRANT OPTION;"
+add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
+add_sql "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
+add_sql "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
 # Création de la base de données
-add_sql "CREATE DATABASE IF NOT EXISTS $DB_NAME;"
+add_sql "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8 COLLATE utf8_general_ci;"
 add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
+add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
 add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'root'@'%';"
+add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'root'@'localhost';"
 add_sql "FLUSH PRIVILEGES;"
 
-mysql -u root < $INIT_FILE
+# Exécuter les commandes SQL
+mysql --socket=/var/run/mysqld/mysqld.sock -u root --password="" < $INIT_FILE
 log "Users & Database created."
 
 log "Stopping temporary MariaDB..."
-mysqladmin -u root shutdown
+mysqladmin --socket=/var/run/mysqld/mysqld.sock -u root --password="" shutdown
 log "MariaDB stopped."
 
 # Supprimer le fichier d'initialisation
 rm -f $INIT_FILE
 
-# Démarrer MariaDB normalement via supervisord
-exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+# Lancer MariaDB directement
+exec /usr/sbin/mysqld --user=mysql --datadir=/var/lib/mysql
