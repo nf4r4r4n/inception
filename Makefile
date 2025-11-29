@@ -2,6 +2,7 @@
 COMPOSE_FILE = srcs/docker-compose.yml
 DATA_DIR = /home/nfararan/data
 SECRETS_DIR = secrets
+COMPOSE_CMD = docker compose
 
 # Cible par défaut
 .DEFAULT_GOAL := help
@@ -32,19 +33,19 @@ setup: ## Configurer l'environnement (secrets, dossiers)
 # Construire les images
 build: ## Construire les images Docker
 	@echo "Construction des images Docker..."
-	@docker-compose -f $(COMPOSE_FILE) build
+	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) build
 	@echo "Construction terminée !"
 
 # Démarrer les services
 up: setup ## Démarrer tous les services
 	@echo "Démarrage des services..."
-	@docker-compose -f $(COMPOSE_FILE) up -d
+	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) up -d
 	@echo "Services démarrés ! Accédez à https://localhost"
 
 # Arrêter les services
 down: ## Arrêter tous les services
 	@echo "Arrêt des services..."
-	@docker-compose -f $(COMPOSE_FILE) down
+	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) down
 	@echo "Services arrêtés !"
 
 # Redémarrer les services
@@ -57,7 +58,7 @@ restart: ## Redémarrer tous les services
 # Afficher les logs
 logs: ## Afficher les logs de tous les services
 	@echo "Affichage des logs..."
-	@docker-compose -f $(COMPOSE_FILE) logs -f
+	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) logs -f
 
 # Afficher l'état des services
 ps: ## Afficher l'état des services
@@ -67,7 +68,7 @@ ps: ## Afficher l'état des services
 # Nettoyer l'environnement
 clean: ## Arrêter et supprimer tous les conteneurs
 	@echo "Nettoyage de l'environnement..."
-	@docker-compose -f $(COMPOSE_FILE) down -v
+	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) down -v
 	@echo "Environnement nettoyé !"
 
 # Liste des commandes avec descriptions
