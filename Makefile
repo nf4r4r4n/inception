@@ -40,7 +40,7 @@ build: ## Construire les images Docker
 up: setup ## Démarrer tous les services
 	@echo "Démarrage des services..."
 	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) up -d
-	@echo "Services démarrés ! Accédez à https://localhost"
+	@echo "Services démarrés ! Accédez à https://nfararan.42.fr"
 
 # Arrêter les services
 down: ## Arrêter tous les services
