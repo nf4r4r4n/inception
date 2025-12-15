@@ -1,6 +1,17 @@
 _This project has been created as part of the 42 curriculum by nfararan._
 
+**Inception guidelines**:
+
+- [Description](#decritpion)
+  - [Virtual machines vs Docker](#virtual-machines-vs-docker)
+    - [Secrets vs Environments Variables](#secrets-vs-environments-variables)
+    - [Docker Network vs Host Network](#docker-network-vs-host-network)
+    - [Docker Volumes vs Bind mounts](#docker-volumes-vs-bind-mounts)
+- [Instructions](#instructions)
+- [Resources](#resources)
+
 # Description
+
 The purpose of the **Inception** project is the make an infrastructure of a website and its server, database.
 All this purpose is made by the tool **Docker**. This project aims the master of the containerization concept, so that the project is making the infrastructure to microservice technics.
 
@@ -16,6 +27,7 @@ All this purpose is made by the tool **Docker**. This project aims the master of
 | **Management** | Managed by hypervisors or cloud platforms | Often managed via orchestration tools like _Kubernetes_ |
 
 ## Secrets vs Environments Variables
+
 | Features | Secrets | Env. Variables |
 | -------- | ------- | -------------- |
 | **Security** | Secure for sensitive data. Values are encrypted at rest and in transit | Insecure for sensitive data. Values are plain text |
@@ -25,6 +37,7 @@ All this purpose is made by the tool **Docker**. This project aims the master of
 | **Management** | Managed centrally by the Docker Swarm or Compose system | Often managed via .env files (which should be in .gitignore) |
 
 ## Docker Network vs Host Network
+
 | Feature | Docker Network | Host Network |
 | ------- | -------------- | ------------ |
 | **Isolation** | Yes, container has its own network namespace and IP address | No, container shares the host's network namespace and IP address |
@@ -35,8 +48,8 @@ All this purpose is made by the tool **Docker**. This project aims the master of
 | **Use Cases** | Ideal for most general-purpose applications, multi-container setups (like Docker Compose), and secure, isolated microservices | Best for performance-critical applications, system-level monitoring tools that need access to the host's network stack, or situations where NAT overhead is undesirable |
 | **Platform** | Works across Linux, macOS, and Windows | Primarily functional on Linux hosts; behaves differently or is limited on Docker Desktop for macOS/Windows |
 
-
 ## Docker Volumes vs Bind Mounts
+
 | Feature | Docker Volumes | Bind Mounts |
 | ------- | -------------- | ----------- |
 | **Management** | Fully managed by the Docker engine | Managed by the host machine's file system |
@@ -47,8 +60,11 @@ All this purpose is made by the tool **Docker**. This project aims the master of
 | **Use Cases** | Databases, production workloads, sharing data safely among multiple containers | Local development (live code updates), sharing host configuration files, accessing log files directly on the host |
 
 # Instructions
+
 The project requires **_GNU Make_** for compiling and running.
-First, you need to setup the environment for all the container which need environment variables and secrets (e.g: database credentials, wordpress credentials, etc).
+First, you need to setup the environment for all the container which need
+environment variables and secrets (e.g: database credentials, wordpress
+credentials, etc).
 
 ```sh
 # Setting up the docker secrets
@@ -56,6 +72,7 @@ make setup
 ```
 
  Then you need to create a **".env"** file at the path: "_srcs/requirements/mariadb_"
+
 ```.env
 # Environment file content
 DB_USER=the_db_username
@@ -63,17 +80,21 @@ DB_NAME=the_db_name
 ```
 
 After all environment setup you can run all the services:
+
 ```sh
 make up
 ```
 
-
 # Resources
-There are many documentations for learning **Docker** on the internet but for me these next are very explicit and user-friendly:
+
+There are many documentations for learning **Docker**
+on the internet but for master these next are very explicit and user-friendly:
+
 - [Docker tutorials for beginners](https://docker-curriculum.com/)
 - [Docker official website](https://docs.docker.com/get-started/)
 - [MariaDB Custom image reference](https://mariadb.com/docs/server/server-management/automated-mariadb-deployment-and-administration/docker-and-mariadb/creating-a-custom-container-image)
 - [Nginx installation](https://nginx.org/en/linux_packages.html#Debian)
 - [Wordpress + Nginx setup](https://www.ionos.fr/digitalguide/hebergement/blogs/installer-wordpress-sur-nginx/)
 
-Generative AI also can contribute to your documentation and make conception comprehension really fast (ChatGPT, QwenChat, Gemini, etc).
+Generative AI also can contribute to your documentation and make conception
+comprehension really fast (ChatGPT, QwenChat, Gemini, etc).
