@@ -67,11 +67,12 @@ environment variables and secrets (e.g: database credentials, wordpress
 credentials, etc).
 
 ```sh
-# Setting up the docker secrets
+# Setting up the docker secrets and env variables automatically
+# but you can change variables manually at src/.env
 make setup
 ```
 
- Then you need to create a **".env"** file at the path: "_srcs/requirements/mariadb_"
+ Then you need to create a **".env"** file at the path: "_srcs/_"
 
 ```.env
 # Environment file content
@@ -84,6 +85,8 @@ After all environment setup you can run all the services:
 ```sh
 make up
 ```
+
+After running all services, you can go to [my website](https://nfararan.42.fr)
 
 # Resources
 

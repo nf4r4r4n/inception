@@ -1,75 +1,68 @@
-# Variables
 COMPOSE_FILE = srcs/docker-compose.yml
 DATA_DIR = /home/nfararan/data
 SECRETS_DIR = secrets
 COMPOSE_CMD = docker compose
+ENV_DIR = srcs
 
-# Cible par défaut
 .DEFAULT_GOAL := help
 
-# Afficher l'aide
-help: ## Afficher ce message d'aide
-	@echo "Inception - Commandes disponibles :"
+help:
+	@echo "Inception - Available commands:"
 	@echo ""
-	@echo "  make setup      - Configurer l'environnement (secrets, dossiers)"
-	@echo "  make up         - Démarrer tous les services"
-	@echo "  make down       - Arrêter tous les services"
-	@echo "  make restart    - Redémarrer tous les services"
-	@echo "  make logs       - Afficher les logs de tous les services"
-	@echo "  make ps         - Afficher l'état des services"
-	@echo "  make build      - Construire les images Docker"
-	@echo "  make clean      - Arrêter et supprimer tous les conteneurs"
+	@echo "  make setup      - Configure the environment (secrets, dossiers)"
+	@echo "  make up         - Start all services"
+	@echo "  make down       - Stop all services"
+	@echo "  make restart    - Restart all services"
+	@echo "  make logs       - Show all services logs"
+	@echo "  make ps         - Show all services state"
+	@echo "  make build      - Build all Docker images"
+	@echo "  make clean      - Stop and remove all containers"
 	@echo ""
 
-# Configurer l'environnement
-setup: ## Configurer l'environnement (secrets, dossiers)
-	@echo "Configuration de l'environnement..."
+setup:
+	@echo "Setting up environment..."
 	@mkdir -p $(DATA_DIR)/db_data $(DATA_DIR)/wp_data
 	@mkdir -p $(SECRETS_DIR)
 	@test -f $(SECRETS_DIR)/db_pass.txt || echo "wordpress_password" > $(SECRETS_DIR)/db_pass.txt
 	@test -f $(SECRETS_DIR)/db_root_pass.txt || echo "root_password" > $(SECRETS_DIR)/db_root_pass.txt
-	@echo "Environnement configuré !"
+	@echo "✅ Secrets created !"
+	@test -f $(ENV_DIR)/.env || echo "DB_USER=the_inception_user" > $(ENV_DIR)/.env
+	@test -f $(ENV_DIR)/.env || echo "DB_NAME=the_inception_database" >> $(ENV_DIR)/.env
+	@echo "✅ Environment variables created !"
+	@echo "✅ Setup finished !"
 
-# Construire les images
-build: ## Construire les images Docker
-	@echo "Construction des images Docker..."
+build:
+	@echo "Building Docker images..."
 	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) build
-	@echo "Construction terminée !"
+	@echo "✅ Build finished !"
 
-# Démarrer les services
-up: setup ## Démarrer tous les services
-	@echo "Démarrage des services..."
+up: setup
+	@echo "Starting services..."
 	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) up -d
-	@echo "Services démarrés ! Accédez à https://nfararan.42.fr"
+	@echo "✅ Services started ! Go to https://nfararan.42.fr"
 
-# Arrêter les services
-down: ## Arrêter tous les services
-	@echo "Arrêt des services..."
+down:
+	@echo "Stopping services..."
 	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) down
-	@echo "Services arrêtés !"
+	@echo "✅ Services stopped !"
 
-# Redémarrer les services
-restart: ## Redémarrer tous les services
-	@echo "Redémarrage des services..."
+restart:
+	@echo "Restarting services..."
 	@$(MAKE) down
 	@$(MAKE) up
-	@echo "Services redémarrés !"
+	@echo "✅ Services restarted !"
 
-# Afficher les logs
-logs: ## Afficher les logs de tous les services
-	@echo "Affichage des logs..."
+logs:
+	@echo "Showing logs..."
 	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) logs -f
 
-# Afficher l'état des services
-ps: ## Afficher l'état des services
-	@echo "État des services :"
-	@docker-compose -f $(COMPOSE_FILE) ps
+ps:
+	@echo "Services state: "
+	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) ps
 
-# Nettoyer l'environnement
-clean: ## Arrêter et supprimer tous les conteneurs
-	@echo "Nettoyage de l'environnement..."
+clean:
+	@echo "Cleaning environment..."
 	@$(COMPOSE_CMD) -f $(COMPOSE_FILE) down -v
-	@echo "Environnement nettoyé !"
+	@echo "✅ Environment cleaned !"
 
-# Liste des commandes avec descriptions
 .PHONY: help setup build up down restart logs ps clean
