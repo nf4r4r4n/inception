@@ -2,11 +2,11 @@ _This project has been created as part of the 42 curriculum by nfararan._
 
 **Inception guidelines**:
 
-- [Description](#decritpion)
+- [Description](#description)
   - [Virtual machines vs Docker](#virtual-machines-vs-docker)
-    - [Secrets vs Environments Variables](#secrets-vs-environments-variables)
-    - [Docker Network vs Host Network](#docker-network-vs-host-network)
-    - [Docker Volumes vs Bind mounts](#docker-volumes-vs-bind-mounts)
+  - [Secrets vs Environments Variables](#secrets-vs-environments-variables)
+  - [Docker Network vs Host Network](#docker-network-vs-host-network)
+  - [Docker Volumes vs Bind mounts](#docker-volumes-vs-bind-mounts)
 - [Instructions](#instructions)
 - [Resources](#resources)
 
