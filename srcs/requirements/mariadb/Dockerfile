@@ -1,10 +1,10 @@
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 # Installer MariaDB
 RUN apt update && \
-    apt install -y --no-install-recommends mariadb-server && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+	apt install -y --no-install-recommends mariadb-server && \
+	apt clean && \
+	rm -rf /var/lib/apt/lists/*
 
 # Désactiver le service MariaDB pour empêcher le démarrage automatique
 RUN rm -f /etc/systemd/system/mysqld.service /etc/init.d/mysql
