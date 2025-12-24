@@ -16,7 +16,6 @@ services:
     volumes:
       - wp_data:/var/www/html
     ports:
-      - "80:80"
       - "443:443"
     networks:
       - frontend
@@ -60,8 +59,6 @@ services:
       DB_NAME: ${DB_NAME}
     volumes:
       - db_data:/var/lib/mysql
-    ports:
-      - "3306:3306"
     networks:
       - backend
     secrets:
