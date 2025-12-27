@@ -30,7 +30,7 @@ setup:
 	@test -f $(SECRETS_DIR)/db_pass.txt || echo "wordpress_password" > $(SECRETS_DIR)/db_pass.txt
 	@test -f $(SECRETS_DIR)/db_root_pass.txt || echo "root_password" > $(SECRETS_DIR)/db_root_pass.txt
 	@echo "✅ Secrets created !"
-	@test -f $(ENV_DIR)/.env || echo -e $(ENV_VALUES) > $(ENV_DIR)/.env
+	@test -f $(ENV_DIR)/.env || echo $(ENV_VALUES) > $(ENV_DIR)/.env
 	@echo "✅ Environment variables created !"
 	@echo "✅ Setup finished !"
 
