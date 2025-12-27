@@ -26,8 +26,7 @@ setup:
 	@test -f $(SECRETS_DIR)/db_pass.txt || echo "wordpress_password" > $(SECRETS_DIR)/db_pass.txt
 	@test -f $(SECRETS_DIR)/db_root_pass.txt || echo "root_password" > $(SECRETS_DIR)/db_root_pass.txt
 	@echo "✅ Secrets created !"
-	@test -f $(ENV_DIR)/.env || echo "DB_USER=the_inception_user" > $(ENV_DIR)/.env
-	@test -f $(ENV_DIR)/.env || echo "DB_NAME=the_inception_database" >> $(ENV_DIR)/.env
+	@test -f $(ENV_DIR)/.env || echo -e "DB_USER=the_inception_user\nDB_NAME=the_inception_database" > $(ENV_DIR)/.env
 	@echo "✅ Environment variables created !"
 	@echo "✅ Setup finished !"
 
