@@ -26,17 +26,17 @@ RUN mkdir -p /run/php /var/www/html
 WORKDIR /tmp
 
 # Télécharger et extraire WordPress
-RUN wget --no-check-certificate https://wordpress.org/latest.tar.gz && \
-	tar -xzf latest.tar.gz && \
-	rm -rf latest.tar.gz
+# RUN wget --no-check-certificate https://wordpress.org/latest.tar.gz && \
+# 	tar -xzf latest.tar.gz && \
+# 	rm -rf latest.tar.gz
 
 # Copier les fichiers WordPress vers le répertoire de destination
-RUN cp -r wordpress/* /var/www/html/ && \
-	rm -rf wordpress
+# RUN cp -r wordpress/* /var/www/html/ && \
+# 	rm -rf wordpress
 
 # Copier les scripts et configurations
 COPY ./tools/entrypoint.sh /entrypoint.sh
-COPY ./tools/www.conf /etc/php/7.4/fpm/pool.d/www.conf
+COPY ./tools/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
 # Rendre les scripts exécutables
 RUN chmod +x /entrypoint.sh
@@ -58,4 +58,4 @@ EXPOSE 9000
 ENTRYPOINT ["/entrypoint.sh"]
 
 # Démarrer PHP-FPM en mode premier plan
-CMD ["/usr/sbin/php-fpm7.4", "--nodaemonize"]
+CMD ["/usr/sbin/php-fpm8.2", "--nodaemonize"]

@@ -22,7 +22,7 @@ RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 
 # Exposer les ports
-EXPOSE 80 443
+EXPOSE 443
 
 # Démarrer nginx
 CMD ["nginx", "-g", "daemon off;"]

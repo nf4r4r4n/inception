@@ -44,6 +44,8 @@ You can set up those requirements manually by creating:
 ```sh
 DB_USER=the_user_name
 DB_NAME=the_database_name
+DB_USER_MANAGER=the_manager
+DB_HOST=mariadb:3306
 ```
 
 # Build and launch

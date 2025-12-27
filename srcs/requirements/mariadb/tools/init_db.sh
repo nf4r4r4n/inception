@@ -21,8 +21,9 @@ fi
 INIT_FILE="/tmp/init.sql"
 DB_PASS=$(cat /run/secrets/db_pass)
 DB_ROOT_PASS=$(cat /run/secrets/db_root_pass)
-DB_USER=${DB_USER:-wordpress_user}
-DB_NAME=${DB_NAME:-wordpress_db}
+DB_USER=${DB_USER}
+DB_NAME=${DB_NAME}
+DB_USER_MANAGER=${DB_USER_MANAGER}
 
 # Créer les répertoires nécessaires et s'assurer des droits appropriés
 mkdir -p /var/run/mysqld /var/log/mysql
@@ -63,18 +64,18 @@ log "Creating Users & Database..."
 add_sql "FLUSH PRIVILEGES;"
 add_sql "CREATE USER IF NOT EXISTS '$DB_USER'@'%' IDENTIFIED BY '$DB_PASS';"
 add_sql "CREATE USER IF NOT EXISTS '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';"
-add_sql "CREATE USER IF NOT EXISTS 'root'@'%' IDENTIFIED BY '$DB_ROOT_PASS';"
-add_sql "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASS';"
+add_sql "CREATE USER IF NOT EXISTS '$DB_USER_MANAGER'@'%' IDENTIFIED BY '$DB_ROOT_PASS';"
+add_sql "CREATE USER IF NOT EXISTS '$DB_USER_MANAGER'@'localhost' IDENTIFIED BY '$DB_ROOT_PASS';"
 add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%' WITH GRANT OPTION;"
 add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'localhost' WITH GRANT OPTION;"
-add_sql "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
-add_sql "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
+add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER_MANAGER'@'%' WITH GRANT OPTION;"
+add_sql "GRANT ALL PRIVILEGES ON *.* TO '$DB_USER_MANAGER'@'localhost' WITH GRANT OPTION;"
 # Création de la base de données
 add_sql "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8 COLLATE utf8_general_ci;"
 add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';"
 add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'localhost';"
-add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'root'@'%';"
-add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO 'root'@'localhost';"
+add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER_MANAGER'@'%';"
+add_sql "GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER_MANAGER'@'localhost';"
 add_sql "FLUSH PRIVILEGES;"
 
 # Exécuter les commandes SQL

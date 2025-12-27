@@ -6,7 +6,7 @@ services:
   #  NGINX
   # ---------
   nginx:
-    image: "nginx:v1"
+    image: nginx:inception_nfararan
     container_name: nginx
     build:
       context: ./requirements/nginx
@@ -25,7 +25,7 @@ services:
   #  WORDPRESS
   # -----------
   wordpress:
-    image: "wordpress:v1"
+    image: wordpress:inception_nfararan
     container_name: wordpress
     build:
       context: ./requirements/wordpress
@@ -33,10 +33,12 @@ services:
     depends_on:
       - mariadb
     environment:
-      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_HOST: ${DB_HOST}
       WORDPRESS_DB_USER: ${DB_USER}
       WORDPRESS_DB_PASSWORD_FILE: /run/secrets/db_pass
       WORDPRESS_DB_NAME: ${DB_NAME}
+      WORDPRESS_DB_USER_MANAGER: ${DB_USER_MANAGER}
+      WORDPRESS_DB_MANAGER_PASSWORD_FILE: /run/secrets/db_root_pass
     volumes:
       - wp_data:/var/www/html
     networks:
@@ -49,7 +51,7 @@ services:
   #  MARIADB
   # ---------
   mariadb:
-    image: "mariadb:v1"
+    image: mariadb:inception_nfararan
     container_name: mariadb
     build:
       context: ./requirements/mariadb
@@ -57,6 +59,7 @@ services:
     environment:
       DB_USER: ${DB_USER}
       DB_NAME: ${DB_NAME}
+      DB_USER_MANAGER: ${DB_USER_MANAGER}
     volumes:
       - db_data:/var/lib/mysql
     networks:

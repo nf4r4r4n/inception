@@ -3,6 +3,10 @@ DATA_DIR = /home/nfararan/data
 SECRETS_DIR = secrets
 COMPOSE_CMD = docker compose
 ENV_DIR = srcs
+ENV_VALUES = "DB_USER=the_inception_user\n\
+DB_NAME=the_inception_database\n\
+DB_USER_MANAGER=the_manager\n\
+DB_HOST=mariadb:3306"
 
 .DEFAULT_GOAL := help
 
@@ -26,7 +30,7 @@ setup:
 	@test -f $(SECRETS_DIR)/db_pass.txt || echo "wordpress_password" > $(SECRETS_DIR)/db_pass.txt
 	@test -f $(SECRETS_DIR)/db_root_pass.txt || echo "root_password" > $(SECRETS_DIR)/db_root_pass.txt
 	@echo "✅ Secrets created !"
-	@test -f $(ENV_DIR)/.env || echo -e "DB_USER=the_inception_user\nDB_NAME=the_inception_database" > $(ENV_DIR)/.env
+	@test -f $(ENV_DIR)/.env || echo -e $(ENV_VALUES) > $(ENV_DIR)/.env
 	@echo "✅ Environment variables created !"
 	@echo "✅ Setup finished !"
 

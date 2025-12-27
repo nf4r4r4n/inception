@@ -78,6 +78,8 @@ make setup
 # Environment file content
 DB_USER=the_db_username
 DB_NAME=the_db_name
+DB_USER_MANAGER=the_manager
+DB_HOST=mariadb:3306
 ```
 
 After all environment setup you can run all the services:
