@@ -31,7 +31,7 @@ if [ ! -f wp-config.php ]; then
         --dbpass=$(cat $WORDPRESS_DB_MANAGER_PASSWORD_FILE) \
         --dbhost=$WORDPRESS_DB_HOST
 
-    # Creation du site web
+    # Website creation
     wp core install --allow-root \
         --url=https://nfararan.42.fr \
         --title="Nfararan Inception" \
@@ -39,19 +39,17 @@ if [ ! -f wp-config.php ]; then
         --admin_password=$(cat $WORDPRESS_DB_MANAGER_PASSWORD_FILE) \
         --admin_email="test@example.com"
 
-    # Utilisateur simple
+    # Simple user creation
     wp user create --allow-root \
         $WORDPRESS_DB_USER \
         simple@example.com \
         --role=author \
         --user_pass=$(cat $WORDPRESS_DB_PASSWORD_FILE)
 
-    # Changer les permissions du fichier de configuration
     chown www-data:www-data wp-config.php
     chmod 644 wp-config.php
 else
     echo "Wordpress already configured"
 fi
 
-# Démarrer le service
 exec "$@"

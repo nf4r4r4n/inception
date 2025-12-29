@@ -18,8 +18,7 @@ services:
     ports:
       - "443:443"
     networks:
-      - frontend
-      - backend
+      - inception_network
 
   # -----------
   #  WORDPRESS
@@ -42,7 +41,7 @@ services:
     volumes:
       - wp_data:/var/www/html
     networks:
-      - backend
+      - inception_network
     secrets:
       - db_pass
       - db_root_pass
@@ -63,7 +62,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     networks:
-      - backend
+      - inception_network
     secrets:
       - db_pass
       - db_root_pass
@@ -72,9 +71,7 @@ services:
 #  NETWORKS
 # ----------
 networks:
-  frontend:
-    driver: bridge
-  backend:
+  inception_network:
     driver: bridge
 
 # ---------

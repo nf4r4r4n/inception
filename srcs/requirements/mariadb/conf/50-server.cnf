@@ -4,7 +4,6 @@ socket = /var/run/mysqld/mysqld.sock
 default-character-set = utf8
 
 [mysqld]
-# Paramètres de base
 user = mysql
 pid-file = /var/run/mysqld/mysqld.pid
 socket = /var/run/mysqld/mysqld.sock
@@ -17,13 +16,11 @@ bind-address = 0.0.0.0
 skip-networking = 0
 skip-innodb = 0
 
-# Fichiers journaux
 log-error = /var/log/mysql/error.log
 # slow_query_log_file = /var/log/mysql/mysql-slow.log
 # general_log_file = /var/log/mysql/mysql.log
 # general_log = 1
 
-# Paramètres de performance et de mémoire
 max_connections = 151
 key_buffer_size = 16M
 max_allowed_packet = 16M
@@ -33,14 +30,12 @@ myisam_recover_options = BACKUP
 query_cache_limit = 1M
 query_cache_size = 16M
 
-# Paramètres InnoDB
 innodb_buffer_pool_size = 64M
 innodb_log_file_size = 5M
 innodb_flush_log_at_trx_commit = 1
 innodb_file_per_table = 1
 innodb_data_file_path = ibdata1:10M:autoextend
 
-# Sécurité et autres
 local-infile = 0
 sql-mode = "NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES"
 character-set-server = utf8
