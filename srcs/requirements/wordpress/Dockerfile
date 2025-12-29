@@ -22,18 +22,6 @@ RUN apt update && \
 # Créer les répertoires nécessaires
 RUN mkdir -p /run/php /var/www/html
 
-# Définir le répertoire de travail
-WORKDIR /tmp
-
-# Télécharger et extraire WordPress
-# RUN wget --no-check-certificate https://wordpress.org/latest.tar.gz && \
-# 	tar -xzf latest.tar.gz && \
-# 	rm -rf latest.tar.gz
-
-# Copier les fichiers WordPress vers le répertoire de destination
-# RUN cp -r wordpress/* /var/www/html/ && \
-# 	rm -rf wordpress
-
 # Copier les scripts et configurations
 COPY ./tools/entrypoint.sh /entrypoint.sh
 COPY ./tools/www.conf /etc/php/8.2/fpm/pool.d/www.conf
@@ -42,8 +30,8 @@ COPY ./tools/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 RUN chmod +x /entrypoint.sh
 
 # Définir les permissions appropriées
-RUN chown -R www-data:www-data /var/www/html && \
-	chmod -R 755 /var/www/html
+# RUN chown -R www-data:www-data /var/www/html && \
+# 	chmod -R 755 /var/www/html
 
 # Définir le répertoire de travail WordPress
 WORKDIR /var/www/html
