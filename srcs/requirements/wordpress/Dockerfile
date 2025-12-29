@@ -1,6 +1,5 @@
 FROM debian:bookworm-slim
 
-# Installer PHP et les extensions nécessaires
 RUN apt update && \
 	apt install -y --no-install-recommends \
 	php-fpm \
@@ -19,31 +18,19 @@ RUN apt update && \
 	apt clean && \
 	rm -rf /var/lib/apt/lists/*
 
-# Créer les répertoires nécessaires
 RUN mkdir -p /run/php /var/www/html
 
-# Copier les scripts et configurations
 COPY ./tools/entrypoint.sh /entrypoint.sh
 COPY ./tools/www.conf /etc/php/8.2/fpm/pool.d/www.conf
 
-# Rendre les scripts exécutables
 RUN chmod +x /entrypoint.sh
 
-# Définir les permissions appropriées
-# RUN chown -R www-data:www-data /var/www/html && \
-# 	chmod -R 755 /var/www/html
-
-# Définir le répertoire de travail WordPress
 WORKDIR /var/www/html
 
-# Volume pour les données persistantes
 VOLUME /var/www/html
 
-# Exposer le port
 EXPOSE 9000
 
-# Point d'entrée
 ENTRYPOINT ["/entrypoint.sh"]
 
-# Démarrer PHP-FPM en mode premier plan
 CMD ["/usr/sbin/php-fpm8.2", "--nodaemonize"]
